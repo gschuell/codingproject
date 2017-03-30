@@ -1,19 +1,50 @@
 package com.adserver.domain;
 
+import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by gschuell on 3/29/17.
  */
+@Component
 public class AdRepository {
 
-    private List<AdRecord> adStore;
-
-    public AdRepository(AdRecord adRecord) {
+    private Map lhm = Collections.synchronizedMap(new LinkedHashMap());
 
 
-        adStore.add(adRecord);
+    public AdRepository() {
+
     }
+
+    public void addAd(AdRecord adEdit) {
+
+        adEdit.setMillisAdded(System.currentTimeMillis());
+        lhm.put(adEdit.getPartnerId(), adEdit);
+
+    }
+
+    public AdRecord getAd(String partnerId) {
+        if (lhm.containsKey(partnerId)) {
+            AdRecord ar = (AdRecord) lhm.get(partnerId);
+            return ar;
+        }
+        return null;
+
+    }
+
+    public void removeAd(String partnerId) {
+        lhm.remove(partnerId);
+    }
+
+    public Collection<AdRecord> listAds() {
+        return lhm.values();
+    }
+
 
 
 }
