@@ -73,9 +73,11 @@ public class AdController {
             } else {
                 returnValue = "No active ad campaign found for partner id " + id;
             }
-
-
+        } else {
+            returnValue = "No campaign was found for partner id " + id;
         }
+
+
         return returnValue;
     }
 
