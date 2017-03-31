@@ -71,10 +71,10 @@ public class AdController {
             if (checkDuration(ad)) {
                 returnValue = gson.toJson(ad);
             } else {
-                returnValue = "No active ad campaign found for partner id " + id;
+                returnValue = "No active ad campaign found for partner_id \"" + id + "\"";
             }
         } else {
-            returnValue = "No campaign was found for partner id " + id;
+            returnValue = "No campaign was found for partner_id \"" + id +"\"";
         }
 
 
