@@ -42,7 +42,7 @@ public class AdController {
         AdRecord tmp = adStore.getAd(ar.getPartnerId());
         if (tmp == null) { //No ad for this partner
             adStore.addAd(ar);
-            returnValue = "Ad added for partner " + ar.getPartnerId();
+            returnValue = "Ad added for partner \"" + ar.getPartnerId() + "\"";
         } else { // ad already exists for this partner
             if (!checkDuration(tmp)) { // Ad expired, remove old one and replace with new one.
                 adStore.removeAd(tmp.getPartnerId());
