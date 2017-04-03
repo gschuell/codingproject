@@ -1,1 +1,0 @@
-curl -H "Content-Type: application/json" -X POST -d '{"partner_id": "Partner 1","duration":10,"ad_content":"Now you can be your very own business owner...see how"}' http://localhost:8080/ad

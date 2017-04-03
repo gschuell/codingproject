@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by gschuell on 3/29/17.
@@ -42,15 +44,15 @@ public class AdController {
         AdRecord tmp = adStore.getAd(ar.getPartnerId());
         if (tmp == null) { //No ad for this partner
             adStore.addAd(ar);
-            returnValue = "Ad added for partner \"" + ar.getPartnerId() + "\"";
+            returnValue = "Ad added for partner \"" + ar.getPartnerId() + "\"\n";
         } else { // ad already exists for this partner
             if (!checkDuration(tmp)) { // Ad expired, remove old one and replace with new one.
                 adStore.removeAd(tmp.getPartnerId());
                 adStore.addAd(ar);
-                returnValue = "Ad added for partner " + ar.getPartnerId();
+                returnValue = "Ad added for partner " + ar.getPartnerId() + "\n";
             }
             else {
-                returnValue = "Ad for partner " + ar.getPartnerId() + " already exists.";
+                returnValue = "Ad for partner " + ar.getPartnerId() + " already exists.\n";
             }
         }
 
@@ -69,16 +71,37 @@ public class AdController {
         AdRecord ad = adStore.getAd(id);
         if (ad != null) {
             if (checkDuration(ad)) {
-                returnValue = gson.toJson(ad);
+                returnValue = gson.toJson(ad) + "\n";
             } else {
-                returnValue = "No active ad campaign found for partner_id \"" + id + "\"";
+                returnValue = "No active ad campaign found for partner_id \"" + id + "\"\n";
             }
         } else {
-            returnValue = "No campaign was found for partner_id \"" + id +"\"";
+            returnValue = "No campaign was found for partner_id \"" + id +"\"\n";
         }
 
 
         return returnValue;
+    }
+
+    @RequestMapping(value = "ad/list", method = RequestMethod.GET, produces = "application/json")
+    public String listActiveAds() {
+
+        final GsonBuilder builder = new GsonBuilder();
+        final Gson gson = builder.create();
+        Set<AdRecord> ads = adStore.listAds();
+        Iterator i = ads.iterator();
+
+        String returnValue = null;
+        List<AdRecord> adsList = null;
+        while (i.hasNext()) {
+            Map.Entry entry = (Map.Entry) i.next();
+             adsList.add((AdRecord) entry.getValue());
+        }
+
+        returnValue = gson.toJson(adsList);
+
+        return returnValue;
+
     }
 
     /**
